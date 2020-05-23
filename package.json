@@ -1,0 +1,27 @@
+{
+  "name": "pokedex-discord",
+  "version": "2.0.1",
+  "description": "Pokémon descriptions, base stats, weaknesses and target CPs",
+  "main": "src/bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint . --fix",
+    "start": "node ."
+  },
+  "author": "kartul",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "config": "^1.30.0",
+    "discord.js": "^11.3.2",
+    "enmap": "^5.1.0",
+    "import-fresh": "^3.1.0",
+    "lodash": "^4.17.5",
+    "moment": "^2.25.3",
+    "mustache": "^2.3.0",
+    "mysql": "^2.18.1",
+    "node-fetch": "^2.6.0",
+    "poke-types": "^1.0.10",
+    "pokemon-gif": "^1.0.12",
+    "readline-sync": "^1.4.10"
+  }
+}

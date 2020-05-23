@@ -1,0 +1,25 @@
+{
+  "status": {
+    "embed": {
+      "title": "{{username}} Status",
+      "fields": [
+        {
+          "name": "Version",
+          "value": "{{version}}"
+        },
+        {
+          "name": "Last start",
+          "value": "{{ready}}"
+        },
+        {
+          "name": "Last pings (ms)",
+          "value": "{{pings}}"
+        },
+        {
+          "name": "Database version",
+          "value": "{{dbVersion}}"
+        }
+      ]
+    }
+  }
+}

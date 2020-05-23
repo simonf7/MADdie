@@ -1,0 +1,16 @@
+{
+  "discord": {
+    "token": "",
+    "prefix": "!",
+    "admin": []
+  },
+  "database": {
+    "host": "",
+    "user": "",
+    "password": "",
+    "database": ""
+  },
+  "mad": {
+    "host": ""
+  }
+}
