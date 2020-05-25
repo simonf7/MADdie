@@ -38,7 +38,7 @@ exports.run = async (client, msg, args) => {
     default:
       text =
         text +
-        ' between' +
+        ' between ' +
         timeFrom.format(timeFormat) +
         ' and ' +
         timeTo.format(timeFormat);
@@ -47,47 +47,38 @@ exports.run = async (client, msg, args) => {
     text = text + ' matching ' + pokemon.join(' or ');
   }
 
-  const url =
-    client.config.mad.host +
-    '/get_game_stats_shiny?from=' +
-    timeFrom.format('X') +
-    '&to=' +
-    timeTo.format('X');
+  const json = await client.madUtils.getShinyStats(client, timeFrom, timeTo);
 
-  fetch(url)
-    .then((res) => res.json())
-    .then((json) => {
-      let mons = json.global_shiny_statistics.sort((a, b) =>
-        a.odds < b.odds ? -1 : a.odds > b.odds ? 1 : 0
-      );
-      mons.forEach((row) => {
-        let found = pokemon.length == 0;
-        pokemon.forEach((p) => {
-          if (row.name.toLowerCase().indexOf(p) >= 0) {
-            found = true;
-          }
-        });
-
-        if (found) {
-          if (text.length > 1900) {
-            msg.channel.send(text);
-            text = '';
-          }
-
-          if (text != '') {
-            text = text + '\n';
-          }
-          text =
-            text +
-            '**' +
-            row.name +
-            '** odds: 1/' +
-            row.odds +
-            ' encounters: ' +
-            row.count;
-        }
-      });
-      message.delete();
-      msg.channel.send(text);
+  let mons = json.global_shiny_statistics.sort((a, b) =>
+    a.odds < b.odds ? -1 : a.odds > b.odds ? 1 : 0
+  );
+  mons.forEach((row) => {
+    let found = pokemon.length == 0;
+    pokemon.forEach((p) => {
+      if (row.name.toLowerCase().indexOf(p) >= 0) {
+        found = true;
+      }
     });
+
+    if (found) {
+      if (text.length > 1900) {
+        msg.channel.send(text);
+        text = '';
+      }
+
+      if (text != '') {
+        text = text + '\n';
+      }
+      text =
+        text +
+        '**' +
+        row.name +
+        '** odds: 1/' +
+        row.odds +
+        ' encounters: ' +
+        row.count;
+    }
+  });
+  message.delete();
+  msg.channel.send(text);
 };
