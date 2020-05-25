@@ -1,5 +1,4 @@
 const moment = require('moment'); // require
-const fetch = require('node-fetch');
 
 exports.run = async (client, msg, args) => {
   const status = await client.madUtils.getStatus(client);

@@ -15,6 +15,7 @@ const readFileAsync = promisify(fs.readFile);
 
 const dts = require('./util/message');
 const client = new Client();
+const discordUtils = require('./util/discord_utils');
 const gymUtils = require('./util/gym_utils');
 const madUtils = require('./util/mad_utils');
 const migrations = require('./util/migrations');
@@ -52,8 +53,10 @@ async function main() {
   client.config = config;
   client.dts = dts;
   client.mustache = mustache;
+  client.discordUtils = discordUtils;
   client.gymUtils = gymUtils;
   client.madUtils = madUtils;
+  client.madStatus = null;
   client.asyncForEach = asyncForEach;
   client.capitalize = capitalize;
   client.pool = pool;
