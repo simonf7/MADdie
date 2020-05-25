@@ -16,6 +16,7 @@ const readFileAsync = promisify(fs.readFile);
 const dts = require('./util/message');
 const client = new Client();
 const gymUtils = require('./util/gym_utils');
+const madUtils = require('./util/mad_utils');
 const migrations = require('./util/migrations');
 const pool = require('./util/database');
 
@@ -52,6 +53,7 @@ async function main() {
   client.dts = dts;
   client.mustache = mustache;
   client.gymUtils = gymUtils;
+  client.madUtils = madUtils;
   client.asyncForEach = asyncForEach;
   client.capitalize = capitalize;
   client.pool = pool;
