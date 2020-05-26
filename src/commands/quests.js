@@ -1,16 +1,16 @@
 const Discord = require('discord.js');
 
 exports.run = async (client, msg, args) => {
-  const fences = await client.madUtils.getGeofences(client);
+  const areas = await client.madUtils.getAreas(client);
 
   let fArgs = [];
   let rArgs = [];
   args.forEach((a) => {
     let found = false;
     if (a.length > 2) {
-      for (var key in fences) {
-        if (fences[key].startsWith(a)) {
-          fArgs.push(fences[key]);
+      for (var key in areas) {
+        if (areas[key].startsWith('pokestops_' + a)) {
+          fArgs.push(areas[key]);
           found = true;
         }
       }
@@ -26,7 +26,10 @@ exports.run = async (client, msg, args) => {
 
   let quests = await client.madUtils.getQuests(client, fArgs[0]);
   if (quests.error) {
-    quests = await client.madUtils.getQuests(client, 'pokestops_' + fArgs[0]);
+    quests = await client.madUtils.getQuests(
+      client,
+      fArgs[0].replace('pokestops_', '')
+    );
   }
   if (quests.error) {
     msg.reply(client.discordUtils.msgError('Sorry, something went wrong'));

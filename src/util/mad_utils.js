@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
-const fetchJson = async (url) => {
-  return fetch(url)
+const fetchJson = async (client, url) => {
+  return fetch(client.config.mad.host + url)
     .then((res) => {
       if (!res.ok) {
         console.log(url + ': ' + res.statusText + ' (' + res.status + ')');
@@ -24,8 +24,8 @@ const fetchJson = async (url) => {
     });
 };
 
-const fetchResults = async (url) => {
-  return fetchJson(url).then((json) => {
+const fetchResults = async (client, url) => {
+  return fetchJson(client, url).then((json) => {
     if (json.results) {
       return json.results;
     }
@@ -35,53 +35,51 @@ const fetchResults = async (url) => {
 
 const getShinyStats = async (client, timeFrom, timeTo) => {
   const url =
-    client.config.mad.host +
     '/get_game_stats_shiny?from=' +
     timeFrom.format('X') +
     '&to=' +
     timeTo.format('X');
 
-  return fetchJson(url);
+  return fetchJson(client, url);
 };
 
 const getStatus = async (client) => {
-  const url = client.config.mad.host + '/get_status';
-
-  return fetchJson(url);
+  return fetchJson(client, '/get_status');
 };
 
 const getDevices = async (client) => {
-  const url = client.config.mad.host + '/api/device';
-
-  return fetchResults(url);
+  return fetchResults(client, '/api/device');
 };
 
 const getWalkers = async (client) => {
-  const url = client.config.mad.host + '/api/walker';
-
-  return fetchResults(url);
+  return fetchResults(client, '/api/walker');
 };
 
 const getGeofences = async (client) => {
-  const url = client.config.mad.host + '/api/geofence';
+  return fetchResults(client, '/api/geofence');
+};
 
-  return fetchResults(url);
+const getAreas = async (client) => {
+  return fetchResults(client, '/api/area');
 };
 
 const getQuests = async (client, fence) => {
-  let url = client.config.mad.host + '/get_quests';
+  let url = '/get_quests';
   if (fence !== '') {
     url = url + '?fence=' + fence;
   }
 
-  return fetchJson(url);
+  return fetchJson(client, url);
 };
 
 module.exports = {
+  fetchJson,
+  fetchResults,
   getShinyStats,
   getStatus,
   getDevices,
   getWalkers,
   getGeofences,
+  getAreas,
   getQuests,
 };

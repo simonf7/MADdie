@@ -1,9 +1,12 @@
 exports.run = async (client, msg, args) => {
-  const fences = await client.madUtils.getGeofences(client);
+  const areas = await client.madUtils.getAreas(client);
 
   let text = '';
-  for (var key in fences) {
-    text = text + (text === '' ? '' : '\n') + fences[key];
+  for (var key in areas) {
+    if (areas[key].startsWith('pokestops_')) {
+      text =
+        text + (text === '' ? '' : '\n') + areas[key].replace('pokestops_', '');
+    }
   }
-  msg.reply({ embed: { description: text } });
+  msg.reply(client.discordUtils.msgEmbed(text));
 };
