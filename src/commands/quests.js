@@ -34,27 +34,37 @@ exports.run = async (client, msg, args) => {
   }
 
   let message = new Discord.RichEmbed();
-  message.setTitle(
+  message.setDescription(
     'Quests found' +
       (fArgs[0] !== '' ? ' for ' + fArgs[0] : '') +
       (rArgs[0] !== '' ? ' matching ' + rArgs.join(', ') : '')
   );
   let count = 0;
+  let replied = false;
 
   quests.filter((q) => {
     let name = q.quest_reward_type === 'Pokemon' ? q.pokemon_name : q.item_type;
     let lName = name.toLowerCase();
 
     rArgs.forEach((r) => {
-      if (r === '' || lName.includes(r)) {
+      if (
+        (r === 'pokemon' && q.quest_reward_type === 'Pokemon') ||
+        r === '' ||
+        lName.includes(r)
+      ) {
         message.addField(
-          name + ': ' + q.name,
+          name + ' : ' + q.name,
           `http://www.google.com/maps/place/${q.latitude},${q.longitude}`
         );
 
         count = count + 1;
         if (count == 25) {
-          msg.channel.send(message);
+          if (replied) {
+            msg.channel.send(message);
+          } else {
+            msg.reply(message);
+            replied = true;
+          }
 
           message = new Discord.RichEmbed();
           count = 0;
@@ -64,6 +74,15 @@ exports.run = async (client, msg, args) => {
   });
 
   if (count > 0) {
-    msg.channel.send(message);
+    if (replied) {
+      msg.channel.send(message);
+    } else {
+      msg.reply(message);
+      replied = true;
+    }
+  }
+
+  if (!replied) {
+    msg.reply(client.discordUtils.msgEmbed('Sorry, no matching quests found'));
   }
 };
