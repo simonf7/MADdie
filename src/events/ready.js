@@ -24,6 +24,8 @@ module.exports = async (client) => {
         ) {
           client.deviceErrors.push(d.name);
           const msg =
+            moment().format('HH:mm') +
+            ' ' +
             d.name +
             ' last heard of ' +
             moment.utc(d.lastProtoDateTime * 1000).fromNow();
@@ -33,13 +35,18 @@ module.exports = async (client) => {
           client.deviceErrors.indexOf(d.name) >= 0
         ) {
           client.deviceErrors.splice(client.deviceErrors.indexOf(d.name));
-          const msg = d.name + ' now active';
+          const msg = moment().format('HH:mm') + ' ' + d.name + ' now active';
           client.discordUtils.msgAdmin(client, msg);
         }
 
         client.madStatus.forEach((s) => {
           if (d.name === s.name && d.rmname !== s.rmname) {
-            const msg = d.name + ' now on route ' + d.rmname;
+            const msg =
+              moment().format('HH:mm') +
+              ' ' +
+              d.name +
+              ' now on route ' +
+              d.rmname;
             client.discordUtils.msgAdmin(client, msg);
           }
         });
