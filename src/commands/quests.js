@@ -39,7 +39,7 @@ exports.run = async (client, msg, args) => {
   let message = new Discord.RichEmbed();
   message.setDescription(
     'Quests found' +
-      (fArgs[0] !== '' ? ' for ' + fArgs[0] : '') +
+      (fArgs[0] !== '' ? ' for ' + fArgs[0].replace('pokestops_', '') : '') +
       (rArgs[0] !== '' ? ' matching ' + rArgs.join(', ') : '')
   );
   let count = 0;
