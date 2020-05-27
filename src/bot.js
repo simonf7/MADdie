@@ -49,7 +49,7 @@ async function main() {
     await askToken(config);
   }
 
-  client.version = '0.1.1 (23rd May 2020)';
+  client.version = '0.2.1 (27th May 2020)';
   client.config = config;
   client.dts = dts;
   client.mustache = mustache;
