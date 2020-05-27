@@ -1,12 +1,22 @@
 exports.run = async (client, msg, args) => {
-  const areas = await client.madUtils.getAreas(client);
+  client.madUtils.getQuestStats(client).then((questStats) => {
+    let text = '';
 
-  let text = '';
-  for (var key in areas) {
-    if (areas[key].startsWith('pokestops_')) {
+    questStats.stop_quest_stats.forEach((a) => {
       text =
-        text + (text === '' ? '' : '\n') + areas[key].replace('pokestops_', '');
-    }
-  }
-  msg.reply(client.discordUtils.msgEmbed(text));
+        text +
+        (text === '' ? '' : '\n') +
+        '**' +
+        a.fence.replace('pokestops_', '') +
+        '**  processed: ' +
+        a.processed +
+        ' (' +
+        a.quests +
+        ' / ' +
+        a.stops +
+        ')';
+    });
+
+    msg.reply(client.discordUtils.msgEmbed(text));
+  });
 };

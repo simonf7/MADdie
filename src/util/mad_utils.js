@@ -72,6 +72,10 @@ const getQuests = async (client, fence) => {
   return fetchJson(client, url);
 };
 
+const getQuestStats = async (client) => {
+  return fetchJson(client, '/get_stop_quest_stats');
+};
+
 module.exports = {
   fetchJson,
   fetchResults,
@@ -82,4 +86,5 @@ module.exports = {
   getGeofences,
   getAreas,
   getQuests,
+  getQuestStats,
 };
