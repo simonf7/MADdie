@@ -1,5 +1,21 @@
 const fs = require('fs');
 
+function calcPolygonArea(vertices) {
+  var total = 0;
+
+  for (var i = 0, l = vertices.length; i < l; i++) {
+    var addX = vertices[i].x;
+    var addY = vertices[i == vertices.length - 1 ? 0 : i + 1].y;
+    var subX = vertices[i == vertices.length - 1 ? 0 : i + 1].x;
+    var subY = vertices[i].y;
+
+    total += addX * addY * 0.5;
+    total -= subX * subY * 0.5;
+  }
+
+  return Math.abs(total);
+}
+
 exports.run = async (client, msg, args) => {
   // split args between include and exclude
   const inc = args
@@ -50,6 +66,8 @@ exports.run = async (client, msg, args) => {
     });
 
     if (include) {
+      let vertices = [];
+
       const id = key.match(/[0-9]+/g);
       let json = {
         name: fence.name,
@@ -61,13 +79,18 @@ exports.run = async (client, msg, args) => {
         const location = c.match(/[0-9]+[.][0-9]+/g);
         if (location && location.length == 2) {
           json.path.push(location.map((l) => parseFloat(l)));
+          vertices.push({ x: location[0], y: location[1] });
         }
       });
+      json.area = calcPolygonArea(vertices);
+
       output.push(json);
 
       count += 1;
     }
   }
+
+  output.sort((a, b) => a.area - b.area);
 
   fs.writeFileSync(
     client.config.temp + 'geofences.json',
