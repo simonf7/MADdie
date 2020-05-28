@@ -17,12 +17,6 @@ const getVersion = async function (client) {
   return 0;
 };
 
-const asyncForEach = async (array, callback) => {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-};
-
 const migrate = async function (client) {
   let version = await getVersion(client);
 
@@ -30,7 +24,7 @@ const migrate = async function (client) {
 
   await fs.readdir(`${__dirname}/migrations/`, async (err, files) => {
     if (err) return;
-    await asyncForEach(files, async (file) => {
+    await client.asyncForEach(files, async (file) => {
       const migrateVersion = file.split('.')[0];
       if (migrateVersion > version) {
         const migration = require(`${__dirname}/migrations/${file}`);

@@ -1,9 +1,3 @@
-const asyncForEach = async (array, callback) => {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-};
-
 const gymName = async (client, gym_id) => {
   const result = await client.pool.query(
     "SELECT name FROM gymdetails WHERE gym_id = '" + gym_id + "'"
@@ -46,7 +40,7 @@ const selectGym = async (client, msg, args) => {
     text = text + client.emojiQ + ': Unknown';
 
     const message = await msg.reply({ embed: { description: text } });
-    await asyncForEach(rows, async (gym, i) => {
+    await client.asyncForEach(rows, async (gym, i) => {
       await message.react(client.emoji[i]);
     });
     await message.react(client.emojiQ);
