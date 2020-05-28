@@ -1,10 +1,35 @@
 const fetch = require('node-fetch');
 
+const fetchMAD = async (client, url) => {
+  return fetch(client.config.mad.host + url)
+    .then((res) => {
+      if (!res.ok) {
+        console.log(
+          'GET ' + url + ': ' + res.statusText + ' (' + res.status + ')'
+        );
+        return {
+          error: res.status,
+          message: res.statusText,
+        };
+      }
+      return res;
+    })
+    .catch((err) => {
+      console.log('GET ' + url + ': ' + err);
+      return {
+        error: 500,
+        message: err,
+      };
+    });
+};
+
 const fetchJson = async (client, url) => {
   return fetch(client.config.mad.host + url)
     .then((res) => {
       if (!res.ok) {
-        console.log(url + ': ' + res.statusText + ' (' + res.status + ')');
+        console.log(
+          'GET ' + url + ': ' + res.statusText + ' (' + res.status + ')'
+        );
         return {
           error: res.status,
           message: res.statusText,
@@ -16,7 +41,7 @@ const fetchJson = async (client, url) => {
       return json;
     })
     .catch((err) => {
-      console.log(url + ': ' + err);
+      console.log('GET ' + url + ': ' + err);
       return {
         error: 500,
         message: err,
@@ -31,6 +56,36 @@ const fetchResults = async (client, url) => {
     }
     return json;
   });
+};
+
+const sendJson = async (client, url, data = {}, method = 'POST') => {
+  return fetch(client.config.mad.host + url, {
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: method,
+    body: JSON.stringify(data),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        console.log(
+          method + ' ' + url + ': ' + res.statusText + ' (' + res.status + ')'
+        );
+        return {
+          error: res.status,
+          message: res.statusText,
+        };
+      }
+      return res;
+    })
+    .catch((err) => {
+      console.log(method + ' ' + url + ': ' + err);
+      return {
+        error: 500,
+        message: err,
+      };
+    });
 };
 
 const getShinyStats = async (client, timeFrom, timeTo) => {
@@ -51,8 +106,55 @@ const getDevices = async (client) => {
   return fetchResults(client, '/api/device');
 };
 
+const findDevices = async (client, names) => {
+  return getStatus(client).then((devices) => {
+    let found = [];
+    devices.forEach((d) => {
+      names.forEach((n) => {
+        if (d.name === n) {
+          found.push({
+            id: d.device_id,
+            name: n,
+            url: '/api/device/' + d.device_id,
+          });
+        }
+      });
+    });
+
+    return found;
+  });
+};
+
+const setDeviceWalker = async (client, deviceId, walkerId) => {
+  const url = '/api/device/' + deviceId;
+  const payload = {
+    walker: '/api/walker/' + walkerId,
+  };
+
+  return sendJson(client, url, payload, 'PATCH');
+};
+
 const getWalkers = async (client) => {
   return fetchResults(client, '/api/walker');
+};
+
+const findWalkers = async (client, names) => {
+  return getWalkers(client).then((walkers) => {
+    let found = [];
+    for (var key in walkers) {
+      names.forEach((n) => {
+        if (walkers[key] === n) {
+          found.push({
+            id: parseInt(key.match(/[0-9]+/g)[0]),
+            name: n,
+            url: key,
+          });
+        }
+      });
+    }
+
+    return found;
+  });
 };
 
 const getGeofences = async (client) => {
@@ -76,15 +178,24 @@ const getQuestStats = async (client) => {
   return fetchJson(client, '/get_stop_quest_stats');
 };
 
+const reloadMAD = async (client) => {
+  return fetchMAD(client, '/reload');
+};
+
 module.exports = {
+  fetchMAD,
   fetchJson,
   fetchResults,
   getShinyStats,
   getStatus,
   getDevices,
+  findDevices,
+  setDeviceWalker,
   getWalkers,
+  findWalkers,
   getGeofences,
   getAreas,
   getQuests,
   getQuestStats,
+  reloadMAD,
 };
