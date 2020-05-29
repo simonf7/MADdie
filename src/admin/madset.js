@@ -21,6 +21,8 @@ exports.run = async (client, msg, args) => {
         )
       );
     }
+  } else {
+    msg.reply(client.discordUtils.msgError('Walker not found.'));
   }
 };
 
