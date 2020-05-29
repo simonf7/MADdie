@@ -111,7 +111,7 @@ const findDevices = async (client, names) => {
     let found = [];
     devices.forEach((d) => {
       names.forEach((n) => {
-        if (d.name === n) {
+        if (d.name.toLowerCase() === n) {
           found.push({
             id: d.device_id,
             name: n,
@@ -143,7 +143,7 @@ const findWalkers = async (client, names) => {
     let found = [];
     for (var key in walkers) {
       names.forEach((n) => {
-        if (walkers[key] === n) {
+        if (walkers[key].toLowerCase() === n.replace(' ', '_')) {
           found.push({
             id: parseInt(key.match(/[0-9]+/g)[0]),
             name: n,
