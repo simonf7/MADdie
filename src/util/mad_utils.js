@@ -114,7 +114,7 @@ const findDevices = async (client, names) => {
         if (d.name.toLowerCase() === n) {
           found.push({
             id: d.device_id,
-            name: n,
+            name: d.name,
             url: '/api/device/' + d.device_id,
           });
         }
@@ -146,7 +146,7 @@ const findWalkers = async (client, names) => {
         if (walkers[key].toLowerCase() === n.replace(' ', '_')) {
           found.push({
             id: parseInt(key.match(/[0-9]+/g)[0]),
-            name: n,
+            name: walkers[key],
             url: key,
           });
         }
