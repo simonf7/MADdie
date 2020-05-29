@@ -15,8 +15,10 @@ module.exports = async (client) => {
   setInterval(() => {
     client.madUtils.getStatus(client).then((data) => {
       data.forEach((d) => {
-        // 15 minutes later
-        let check = moment.utc(d.lastProtoDateTime * 1000).add(15, 'minute');
+        // x minutes later
+        let check = moment
+          .utc(d.lastProtoDateTime * 1000)
+          .add(client.config.mad.timeout, 'minute');
         if (
           d.mode !== 'Idle' &&
           moment().isAfter(check) &&
@@ -25,9 +27,9 @@ module.exports = async (client) => {
           client.deviceErrors.push(d.name);
           const msg =
             moment().format('HH:mm') +
-            ' ' +
+            ' **' +
             d.name +
-            ' last heard of ' +
+            '** last heard of ' +
             moment.utc(d.lastProtoDateTime * 1000).fromNow();
           client.discordUtils.msgAdmin(client, msg);
         } else if (
@@ -35,7 +37,8 @@ module.exports = async (client) => {
           client.deviceErrors.indexOf(d.name) >= 0
         ) {
           client.deviceErrors.splice(client.deviceErrors.indexOf(d.name));
-          const msg = moment().format('HH:mm') + ' ' + d.name + ' now active';
+          const msg =
+            moment().format('HH:mm') + ' **' + d.name + '** now active';
           client.discordUtils.msgAdmin(client, msg);
         }
 
@@ -43,10 +46,11 @@ module.exports = async (client) => {
           if (d.name === s.name && d.rmname !== s.rmname) {
             const msg =
               moment().format('HH:mm') +
-              ' ' +
+              ' **' +
               d.name +
-              ' now on route ' +
-              d.rmname;
+              '** now on route **' +
+              d.rmname +
+              '**';
             client.discordUtils.msgAdmin(client, msg);
           }
         });

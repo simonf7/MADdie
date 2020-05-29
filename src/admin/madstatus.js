@@ -24,5 +24,5 @@ exports.run = async (client, msg, args) => {
 };
 
 exports.aliases = () => {
-  return ['ms'];
+  return ['mstatus'];
 };
