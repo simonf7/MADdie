@@ -51,8 +51,8 @@ exports.run = async (client, msg, args) => {
 
     rArgs.forEach((r) => {
       if (
-        (r === 'pokemon' && q.quest_reward_type === 'Pokemon') ||
-        r === '' ||
+        //(r === 'pokemon' && q.quest_reward_type === 'Pokemon') ||
+        //r === '' ||
         lName.includes(r)
       ) {
         message.addField(
