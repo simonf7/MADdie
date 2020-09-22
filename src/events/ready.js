@@ -14,10 +14,12 @@ module.exports = async (client) => {
 
   setInterval(() => {
     client.madUtils.getStatus(client).then((data) => {
+      console.log(data);
       data.forEach((d) => {
         // x minutes later
         let check = moment
-          .utc(d.lastProtoDateTime * 1000)
+          .unix(d.lastProtoDateTime)
+          .utc()
           .add(client.config.mad.timeout, 'minute');
         if (
           d.mode !== 'Idle' &&
@@ -37,8 +39,7 @@ module.exports = async (client) => {
           client.deviceErrors.indexOf(d.name) >= 0
         ) {
           client.deviceErrors.splice(client.deviceErrors.indexOf(d.name));
-          const msg =
-            moment().format('HH:mm') + ' **' + d.name + '** now active';
+          const msg = moment().format('HH:mm') + ' **' + d.name + '** active';
           client.discordUtils.msgAdmin(client, msg);
         }
 
@@ -48,7 +49,7 @@ module.exports = async (client) => {
               moment().format('HH:mm') +
               ' **' +
               d.name +
-              '** now on route **' +
+              '** -> **' +
               d.rmname +
               '**';
             client.discordUtils.msgAdmin(client, msg);
