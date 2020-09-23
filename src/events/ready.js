@@ -14,7 +14,6 @@ module.exports = async (client) => {
 
   setInterval(() => {
     client.madUtils.getStatus(client).then((data) => {
-      console.log(data);
       data.forEach((d) => {
         // x minutes later
         let check = moment
