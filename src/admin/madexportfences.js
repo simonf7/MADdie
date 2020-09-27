@@ -70,7 +70,7 @@ exports.run = async (client, msg, args) => {
 
       const id = key.match(/[0-9]+/g);
       let json = {
-        name: fence.name,
+        name: fence.name.replace('.', ''),
         color: colors[count % colors.length],
         id: parseInt(id[0]),
         path: [],
