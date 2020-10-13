@@ -100,5 +100,5 @@ exports.run = async (client, msg, args) => {
 };
 
 exports.aliases = () => {
-  return ['atv001', 'atv002', 'atv003', 'atv004', 'motog5'];
+  return ['atv001', 'atv002', 'atv003', 'atv004', 'atv005'];
 };
