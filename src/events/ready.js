@@ -13,50 +13,55 @@ module.exports = async (client) => {
   });
 
   setInterval(() => {
-    client.madUtils.getStatus(client).then((data) => {
-      data.forEach((d) => {
-        // x minutes later
-        let check = moment
-          .unix(d.lastProtoDateTime)
-          .utc()
-          .add(client.config.mad.timeout, 'minute');
-        if (
-          d.mode !== 'Idle' &&
-          moment().isAfter(check) &&
-          client.deviceErrors.indexOf(d.name) == -1
-        ) {
-          client.deviceErrors.push(d.name);
-          const msg =
-            moment().format('HH:mm') +
-            ' **' +
-            d.name +
-            '** last heard of ' +
-            moment.utc(d.lastProtoDateTime * 1000).fromNow();
-          client.discordUtils.msgAdmin(client, msg);
-        } else if (
-          moment().isBefore(check) &&
-          client.deviceErrors.indexOf(d.name) >= 0
-        ) {
-          client.deviceErrors.splice(client.deviceErrors.indexOf(d.name));
-          const msg = moment().format('HH:mm') + ' **' + d.name + '** active';
-          client.discordUtils.msgAdmin(client, msg);
-        }
-
-        client.madStatus.forEach((s) => {
-          if (d.name === s.name && d.rmname !== s.rmname) {
+    client.madUtils
+      .getStatus(client)
+      .then((data) => {
+        data.forEach((d) => {
+          // x minutes later
+          let check = moment
+            .unix(d.lastProtoDateTime)
+            .utc()
+            .add(client.config.mad.timeout, 'minute');
+          if (
+            d.mode !== 'Idle' &&
+            moment().isAfter(check) &&
+            client.deviceErrors.indexOf(d.name) == -1
+          ) {
+            client.deviceErrors.push(d.name);
             const msg =
               moment().format('HH:mm') +
               ' **' +
               d.name +
-              '** -> **' +
-              d.rmname +
-              '**';
+              '** last heard of ' +
+              moment.utc(d.lastProtoDateTime * 1000).fromNow();
+            client.discordUtils.msgAdmin(client, msg);
+          } else if (
+            moment().isBefore(check) &&
+            client.deviceErrors.indexOf(d.name) >= 0
+          ) {
+            client.deviceErrors.splice(client.deviceErrors.indexOf(d.name));
+            const msg = moment().format('HH:mm') + ' **' + d.name + '** active';
             client.discordUtils.msgAdmin(client, msg);
           }
-        });
-      });
 
-      client.madStatus = data;
-    });
+          client.madStatus.forEach((s) => {
+            if (d.name === s.name && d.rmname !== s.rmname) {
+              const msg =
+                moment().format('HH:mm') +
+                ' **' +
+                d.name +
+                '** -> **' +
+                d.rmname +
+                '**';
+              client.discordUtils.msgAdmin(client, msg);
+            }
+          });
+        });
+
+        client.madStatus = data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, 60000);
 };
