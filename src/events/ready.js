@@ -13,9 +13,10 @@ module.exports = async (client) => {
   });
 
   setInterval(() => {
-    client.madUtils
-      .getStatus(client)
-      .then((data) => {
+    client.madUtils.getStatus(client).then((data) => {
+      if (data.error) {
+        client.discordUtils.msgAdmin(client, 'SERVER ERROR: ' + data.message);
+      } else {
         data.forEach((d) => {
           // x minutes later
           let check = moment
@@ -59,9 +60,7 @@ module.exports = async (client) => {
         });
 
         client.madStatus = data;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      }
+    });
   }, 60000);
 };
