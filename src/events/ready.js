@@ -1,4 +1,5 @@
 const moment = require('moment'); // require
+const { checkStock } = require('../util/stock');
 
 module.exports = async (client) => {
   console.log('Loading MAD status');
@@ -61,6 +62,13 @@ module.exports = async (client) => {
 
         client.madStatus = data;
       }
+
+      // stock check
+      checkStock(true).then((stock) => {
+        if (stock != '') {
+          client.discordUtils.msgAdmin(client, stock);
+        }
+      });
     });
-  }, 60000);
+  }, 300000);
 };
