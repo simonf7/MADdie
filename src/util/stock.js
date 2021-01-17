@@ -36,8 +36,6 @@ const checkStock = async (onlyInstock = false) => {
     });
   }
 
-  console.log(msg);
-
   if (msg.length == 0) {
     return '';
   }
