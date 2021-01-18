@@ -4,6 +4,6 @@ exports.run = async (client, msg, args) => {
   let text = await checkStock(false);
 
   if (text != '') {
-    msg.channel.send(text);
+    msg.channel.send(client.discordUtils.msgEmbed(text));
   }
 };

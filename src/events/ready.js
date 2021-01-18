@@ -14,6 +14,7 @@ module.exports = async (client) => {
   });
 
   setInterval(() => {
+    //setTimeout(() => {
     client.madUtils.getStatus(client).then((data) => {
       if (data.error) {
         client.discordUtils.msgAdmin(client, 'SERVER ERROR: ' + data.message);
@@ -66,9 +67,13 @@ module.exports = async (client) => {
       // stock check
       checkStock(true).then((stock) => {
         if (stock != '') {
-          client.discordUtils.msgAdmin(client, stock);
+          client.discordUtils.msgAdmin(
+            client,
+            client.discordUtils.msgEmbed(stock)
+          );
         }
       });
     });
   }, 300000);
+  //}, 1000);
 };
