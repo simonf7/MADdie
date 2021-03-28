@@ -58,8 +58,8 @@ const fetchResults = async (client, url) => {
   });
 };
 
-const sendJson = async (client, url, data = {}, method = 'POST') => {
-  return fetch(client.config.mad.host + url, {
+const _sendJson = async (url, data = {}, method = 'POST') => {
+  return fetch(url, {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -86,6 +86,10 @@ const sendJson = async (client, url, data = {}, method = 'POST') => {
         message: err,
       };
     });
+};
+
+const sendJson = async (client, url, data = {}, method = 'POST') => {
+  return _sendJson(client.config.mad.host + url, data, method);
 };
 
 const getShinyStats = async (client, timeFrom, timeTo) => {
@@ -182,6 +186,19 @@ const reloadMAD = async (client) => {
   return fetchMAD(client, '/reload');
 };
 
+const powerDevice = async (client, device, action) => {
+  if (client.config.power && client.config.power[action]) {
+    const endPoint = client.config.power[action].endpoint;
+    let string = JSON.stringify(client.config.power[action].command);
+    string = string.replace(':device:', device.name);
+    const command = JSON.parse(string);
+
+    return await _sendJson(endPoint, command);
+  }
+
+  return null;
+};
+
 module.exports = {
   fetchMAD,
   fetchJson,
@@ -198,4 +215,5 @@ module.exports = {
   getQuests,
   getQuestStats,
   reloadMAD,
+  powerDevice,
 };

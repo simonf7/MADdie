@@ -1,3 +1,17 @@
+async function onDevice(client, msg, device) {
+  const res = await client.madUtils.powerDevice(client, device, 'power_on');
+  if (res.status >= 200 && res.status < 300) {
+    msg.reply(client.discordUtils.msgOk('Device **' + device.name + '** on'));
+  }
+}
+
+async function offDevice(client, msg, device) {
+  const res = await client.madUtils.powerDevice(client, device, 'power_off');
+  if (res.status >= 200 && res.status < 300) {
+    msg.reply(client.discordUtils.msgOk('Device **' + device.name + '** off'));
+  }
+}
+
 async function stopDevice(client, msg, device) {
   const walker = await client.madUtils.findWalkers(client, ['idle']);
 
@@ -50,6 +64,18 @@ exports.run = async (client, msg, args) => {
   // stopping a walker
   if (args[0] == 'stop') {
     await stopDevice(client, msg, devices[0]);
+    return;
+  }
+
+  // power on a walker
+  if (args[0] == 'on') {
+    await onDevice(client, msg, devices[0]);
+    return;
+  }
+
+  // power off a walker
+  if (args[0] == 'off') {
+    await offDevice(client, msg, devices[0]);
     return;
   }
 
