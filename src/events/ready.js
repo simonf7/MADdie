@@ -38,22 +38,18 @@ module.exports = async (client) => {
             client.discordUtils.msgAdmin(client, msg);
 
             // toggle power
-            client.madUtils
-              .powerDevice(client, d.name, 'power_off')
-              .then(() => {
-                setTimeout(() => {
-                  client.madUtils
-                    .powerDevice(client, d.name, 'power_on')
-                    .then(() => {
-                      const msg =
-                        moment().format('HH:mm') +
-                        ' **' +
-                        d.name +
-                        '** power toggled';
-                      client.discordUtils.msgAdmin(client, msg);
-                    });
-                }, 5000);
-              });
+            client.madUtils.powerDevice(client, d, 'power_off').then(() => {
+              setTimeout(() => {
+                client.madUtils.powerDevice(client, d, 'power_on').then(() => {
+                  const msg =
+                    moment().format('HH:mm') +
+                    ' **' +
+                    d.name +
+                    '** power toggled';
+                  client.discordUtils.msgAdmin(client, msg);
+                });
+              }, 5000);
+            });
           } else if (
             moment().isBefore(check) &&
             client.deviceErrors.indexOf(d.name) >= 0
