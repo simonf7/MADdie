@@ -4,7 +4,7 @@ const fetchMAD = async (client, url) => {
   return fetch(client.config.mad.host + url)
     .then((res) => {
       if (!res.ok) {
-        console.log(
+        console.error(
           'GET ' + url + ': ' + res.statusText + ' (' + res.status + ')'
         );
         return {
@@ -15,7 +15,7 @@ const fetchMAD = async (client, url) => {
       return res;
     })
     .catch((err) => {
-      console.log('GET ' + url + ': ' + err);
+      console.error('GET ' + url + ': ' + err);
       return {
         error: 500,
         message: err,
@@ -27,7 +27,7 @@ const fetchJson = async (client, url) => {
   return fetch(client.config.mad.host + url)
     .then((res) => {
       if (!res.ok) {
-        console.log(
+        console.error(
           'GET ' + url + ': ' + res.statusText + ' (' + res.status + ')'
         );
         return {
@@ -41,7 +41,7 @@ const fetchJson = async (client, url) => {
       return json;
     })
     .catch((err) => {
-      console.log('GET ' + url + ': ' + err);
+      console.error('GET ' + url + ': ' + err);
       return {
         error: 500,
         message: err,
@@ -69,7 +69,7 @@ const _sendJson = async (url, data = {}, method = 'POST') => {
   })
     .then((res) => {
       if (!res.ok) {
-        console.log(
+        console.error(
           method + ' ' + url + ': ' + res.statusText + ' (' + res.status + ')'
         );
         return {
@@ -80,7 +80,7 @@ const _sendJson = async (url, data = {}, method = 'POST') => {
       return res;
     })
     .catch((err) => {
-      console.log(method + ' ' + url + ': ' + err);
+      console.error(method + ' ' + url + ': ' + err);
       return {
         error: 500,
         message: err,
