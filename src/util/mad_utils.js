@@ -166,7 +166,7 @@ const getGeofences = async (client) => {
 };
 
 const getAreas = async (client) => {
-  return fetchResults(client, '/api/area');
+  return fetchResults(client, '/get_areas');
 };
 
 const getQuests = async (client, fence) => {

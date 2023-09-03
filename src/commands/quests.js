@@ -8,12 +8,12 @@ exports.run = async (client, msg, args) => {
   args.forEach((a) => {
     let found = false;
     if (a.length > 2) {
-      for (var key in areas) {
-        if (areas[key].startsWith('pokestops_' + a)) {
-          fArgs.push(areas[key]);
+      areas.forEach(area => {
+        if (area.name.startsWith('pokestops_' + a)) {
+          fArgs.push(area.name);
           found = true;
         }
-      }
+      });
       if (!found) {
         rArgs.push(a);
       }
@@ -39,8 +39,8 @@ exports.run = async (client, msg, args) => {
   let message = new Discord.RichEmbed();
   message.setDescription(
     'Quests found' +
-      (fArgs[0] !== '' ? ' for ' + fArgs[0].replace('pokestops_', '') : '') +
-      (rArgs[0] !== '' ? ' matching ' + rArgs.join(', ') : '')
+    (fArgs[0] !== '' ? ' for ' + fArgs[0].replace('pokestops_', '') : '') +
+    (rArgs[0] !== '' ? ' matching ' + rArgs.join(', ') : '')
   );
   let count = 0;
   let replied = false;

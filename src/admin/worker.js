@@ -3,6 +3,9 @@ async function onDevice(client, msg, device) {
   if (res.status >= 200 && res.status < 300) {
     msg.reply(client.discordUtils.msgOk('Device **' + device.name + '** on'));
   }
+  else {
+    msg.reply(client.discordUrils.msgOk('Respone: ' + res.status));
+  }
 }
 
 async function offDevice(client, msg, device) {
