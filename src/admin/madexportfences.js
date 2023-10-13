@@ -51,7 +51,11 @@ exports.run = async (client, msg, args) => {
   let count = 0;
 
   for (var key in fences) {
-    const fence = await client.madUtils.fetchResults(client, key);
+    const response = await client.madUtils.fetchResults(client, '/api/geofence/' + key);
+    let fence = null;
+    if (response) {
+      fence = response[key];
+    }
 
     let include = inc.length == 0 ? true : exc.length == 0 ? false : true;
     inc.forEach((a) => {
@@ -75,7 +79,9 @@ exports.run = async (client, msg, args) => {
         id: parseInt(id[0]),
         path: [],
       };
-      fence.fence_data.forEach((c) => {
+
+      const fence_data = JSON.parse(fence.fence_data);
+      fence_data.forEach((c) => {
         const location = c.match(/[0-9]+[.][0-9]+/g);
         if (location && location.length == 2) {
           json.path.push(location.map((l) => parseFloat(l)));
